@@ -453,7 +453,8 @@ To mitigate this vulnerability, input validation and sanitization should be perf
 ---
 ### Proof of Concept ###
 
-Inputting a previous file identified before as having credentials.
+Testing access to webpages, and various files within the system. The issue here is that the user can view unauthorized files.
+
 | URL Success | File Success | File Failure |
 | ----------- | ------------ | ------------ |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a6d785df-7deb-4a44-b4f3-e2c48fff1477) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/88e55c42-a3e0-47fe-a678-6e4250c1e8a6) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/00624099-7227-4438-866f-4e277590f57a) |
@@ -464,16 +465,55 @@ Inputting a previous file identified before as having credentials.
 ## Access Control Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
+Access control issues in Android applications refer to vulnerabilities that allow unauthorized users or components to gain access to sensitive functionality or data. These issues typically arise due to improper implementation of access control mechanisms within the app. Here are some common access control issues in Android applications:
+- **Improper Authentication**: Apps may lack proper authentication mechanisms, allowing unauthorized users to access restricted features or data.
+- **Insufficient Authorization**: Even if authentication is implemented, apps may fail to enforce proper authorization checks, allowing authenticated users to access functionality or data they shouldn't have access to.
+- **Insecure Data Transmission**: Apps may transmit sensitive data over unencrypted channels or without proper authentication, allowing attackers to intercept and access the data.
+- **Insecure Data Storage**: Apps may store sensitive data insecurely, such as in plaintext or in accessible locations, allowing unauthorized access to the data.
+- **Insecure Component Integration**: Apps may integrate with other components, such as content providers or activities, without proper access controls, allowing attackers to exploit these components to gain access to sensitive functionality or data.
+- **Privilege Escalation**: Apps may have vulnerabilities that allow attackers to escalate their privileges and gain access to sensitive functionality or data that they shouldn't have access to.
+
+To mitigate access control issues in Android applications, developers should follow best practices such as:
+- Implementing strong authentication mechanisms, such as username/password or biometric authentication.
+- Enforcing proper authorization checks throughout the app to ensure that users only have access to functionality and data they are authorized to access.
+- Using secure communication protocols, such as HTTPS, to transmit sensitive data over the network.
+- Encrypting sensitive data before storing it on the device and storing it in secure locations, such as the device's internal storage with proper file permissions.
+- Implementing proper access controls for all app components, including activities, services, and content providers.
+- Regularly testing the app for security vulnerabilities, including access control issues, and promptly addressing any issues discovered.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: You are able to access the API credentials when you click the button. Now, try to access the API credentials from outside the app.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "AccessControl1Activity".
 
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/910bd72d-5867-4404-889c-633fc89fd3f7)
+
+The vulnerability in the code lies in the `viewAPICredentials()` method.
+
+```java
+    i.setAction("jakhar.aseem.diva.action.VIEW_CREDS");
+```
+
+The vulnerability arises from the lack of proper access control checks before invoking the `VIEW_CREDS` action via an implicit intent. This allows any app installed on the device that declares support for handling the `VIEW_CREDS` action to intercept and handle this intent, potentially leading to unauthorized access to sensitive API credentials.
+
+To mitigate this vulnerability, the app should implement proper access control checks to ensure that only authorized components can handle sensitive actions. This can be achieved by using explicit intents with custom permissions or by implementing other access control mechanisms as per the app's requirements.
+  
 ---
 ### Proof of Concept ###
 
+Using drozer to assist in analyzing this. Download the drozer-agent.apk that is to be installed on the emulated Android device from [WithSecureLab's GitHub](https://github.com/WithSecureLabs/drozer-agent/releases). Used **adb push** to upload the apk to the emulated Android device.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ceadb6b3-b49d-43aa-8b8f-29e8f3736436)
+
+
+
+ 
+
+|     |     |
+| --- | --- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/8c1bf9cc-397c-4fd8-8380-e39ea7409ea7) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/0d52bdf4-d7f4-4fdd-9c2d-01b8589966ab) |
 
 
 ---
