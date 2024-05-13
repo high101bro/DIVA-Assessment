@@ -454,9 +454,10 @@ To mitigate this vulnerability, input validation and sanitization should be perf
 ### Proof of Concept ###
 
 Inputting a previous file identified before as having credentials.
-|   |   |  |
+| URL  | File Success  | File Failure |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a6d785df-7deb-4a44-b4f3-e2c48fff1477) |
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/88e55c42-a3e0-47fe-a678-6e4250c1e8a6) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/00624099-7227-4438-866f-4e277590f57a) |
+|   |   |   |
 
 
 ---
