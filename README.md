@@ -31,47 +31,77 @@ Here I'll be detailing my process as I assess all thirteen (13) vulnerabilities 
 
 ## Environment Configuration and Setup
 [Back to Table of Contents](#table-of-contents)
+
 My environment consists of a laptop running Windows 11, with Kali running with WSL - I'm using Win-Kex to view Kali's desktop. [Android Studio](https://developer.android.com/studio?gad_source=1&gclid=CjwKCAjw9IayBhBJEiwAVuc3fqQoq4Q52otj5C432gWKB5goRUia9s-Jcw5vJs5J_g7d68-yjKlklBoCUZQQAvD_BwE&gclsrc=aw.ds) was installed within Kali, rather than within the host Windows environment. A Pixel 3a XL API 25 2 emulator was downloaded and configured within Android Studio and the DIVA apk was installed by being pushed to it via adb (Android Debug Bridge).
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ff80bcd1-0449-4a88-b17f-79e63175f675)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/665477b7-8f83-4d19-b336-ac2fc03df27d)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e618f7dc-c547-4c15-81d6-ba5f434495fc)
 
 
 ## Insecure Logging
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/96755daf-d90b-4292-b1a0-e5463fc31060)
+
 
 ## Hardcoding Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/182f37be-fe48-4f01-9794-39b1d9590e74)
+
 
 ## Insecure Data Storage - Part 1
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/665088df-be89-436e-a6f6-ba01c1dca27b)
+
 
 ## Insecure Data Storage - Part 2
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/441b3a0d-1e81-4a40-8272-833f378fc8f9)
+
 
 ## Insecure Data Storage - Part 3
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/609f9220-bd84-4847-a16c-92dfc8867b6e)
+
 
 ## Insecure Data Storage Part 4
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b93ccd74-df1a-4a51-9156-d94cf7eda838)
+
 
 ## Input Validation Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6a90ec27-9dab-4c53-8b5a-cbc79cf42bef)
+
 
 ## Input Validation Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/97441cd3-5245-4309-a71d-fa3c70c851ab)
+
 
 ## Access Control Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ed407483-a371-4fcd-ae2b-7dbc6d5dbc97)
+
 
 ## Access Control Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b1d89686-aa9f-468e-8422-eae1a692143f)
+
 
 ## Access Control Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f6a9357d-daa1-4b44-b640-e57f502abfa4)
+
 
 ## Hardcoding Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/1833520b-cd56-4c0c-a73f-4e3672dc0884)
+
 
 ## Input Validation Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/767233a8-e24e-4627-a8eb-83091cb3986f)
 
 
 
