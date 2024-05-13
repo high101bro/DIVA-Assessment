@@ -44,6 +44,17 @@ My environment consists of a laptop running Windows 11, with Kali running with W
 
 Insecure logging refers to the practice of storing sensitive or confidential information in log files without adequate protection. This could include usernames, passwords, API keys, or other personally identifiable information (PII). Insecure logging can lead to serious security risks if these log files are accessed by unauthorized users, potentially exposing sensitive data and compromising user privacy. It's essential for developers to implement proper logging mechanisms, including encryption and access controls, to ensure the security of log files and prevent unauthorized access to sensitive information.
 
+Insecure logging can pose significant security risks, as it may lead to data breaches, privacy violations, and regulatory compliance issues. To mitigate these risks, developers should follow best practices for secure logging, including:
+- Avoiding logging sensitive information unless absolutely necessary.
+- Encrypting sensitive data before writing it to log files.
+- Implementing access controls to restrict access to log files.
+- Using conditional logging to ensure that sensitive information is not logged in release builds.
+- Regularly reviewing and auditing log files for security vulnerabilities.
+
+By addressing these concerns, developers can help protect user data and maintain the security of their Android applications.
+
+---
+
 Within Kali, I decompileed the APK with jadx-gui.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cfb2f8d0-35e1-457c-a790-c49dbb34b482)
