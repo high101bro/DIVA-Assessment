@@ -12,6 +12,7 @@ By practicing with DIVA, individuals can improve their ability to identify secur
 The source code for DIVA Android can be found [here](https://github.com/payatu/diva-android) on GitHub by payatu. The original compiled DIVA apk can be found [here](https://github.com/0xArab/diva-apk-file) on Github by 0xArab, but for completeness, I've I've included a copy in this repo.
 
 Here I'll be detailing my process as I assess all thirteen (13) vulnerabilities availabe within DIVA.
+## Table of Contents
 - [Environment Configuration and Setup](#environment-configuration-and-setup)
 1. [Insecure Logging](#insecure-logging)
 2. [Hardcoding Issues - Part 1](#hardcoding-issues---part-1)
@@ -31,45 +32,46 @@ Here I'll be detailing my process as I assess all thirteen (13) vulnerabilities 
 My environment consists of a laptop running Windows 11, with Kali running with WSL - I'm using Win-Kex to view Kali's desktop. [Android Studio](https://developer.android.com/studio?gad_source=1&gclid=CjwKCAjw9IayBhBJEiwAVuc3fqQoq4Q52otj5C432gWKB5goRUia9s-Jcw5vJs5J_g7d68-yjKlklBoCUZQQAvD_BwE&gclsrc=aw.ds) was installed within Kali, rather than within the host Windows environment. A Pixel 3a XL API 25 2 emulator was downloaded and configured within Android Studio and the DIVA apk was installed by being pushed to it via adb (Android Debug Bridge).
 
 ## Environment Configuration and Setup
+[Back to Table of Contents](#table-of-contents)
 
 ## Insecure Logging
-Content about Insecure Logging here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Hardcoding Issues - Part 1
-Content about Hardcoding Issues - Part 1 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Insecure Data Storage - Part 1
-Content about Insecure Data Storage - Part 1 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Insecure Data Storage - Part 2
-Content about Insecure Data Storage - Part 2 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Insecure Data Storage - Part 3
-Content about Insecure Data Storage - Part 3 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Insecure Data Storage Part 4
-Content about Insecure Data Storage Part 4 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Input Validation Issues - Part 1
-Content about Input Validation Issues - Part 1 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Input Validation Issues - Part 2
-Content about Input Validation Issues - Part 2 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Access Control Issues - Part 1
-Content about Access Control Issues - Part 1 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Access Control Issues - Part 2
-Content about Access Control Issues - Part 2 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Access Control Issues - Part 3
-Content about Access Control Issues - Part 3 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Hardcoding Issues - Part 2
-Content about Hardcoding Issues - Part 2 here.
+[Back to Table of Contents](#table-of-contents)
 
 ## Input Validation Issues - Part 3
-Content about Input Validation Issues - Part 3 here.
+[Back to Table of Contents](#table-of-contents)
 
 
 
