@@ -44,21 +44,33 @@ My environment consists of a laptop running Windows 11, with Kali running with W
 
 Insecure logging refers to the practice of storing sensitive or confidential information in log files without adequate protection. This could include usernames, passwords, API keys, or other personally identifiable information (PII). Insecure logging can lead to serious security risks if these log files are accessed by unauthorized users, potentially exposing sensitive data and compromising user privacy. It's essential for developers to implement proper logging mechanisms, including encryption and access controls, to ensure the security of log files and prevent unauthorized access to sensitive information.
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/96755daf-d90b-4292-b1a0-e5463fc31060)
-
 Within Kali, I decompileed the APK with jadx-gui.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cfb2f8d0-35e1-457c-a790-c49dbb34b482)
 
 The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating down through the tree you'll find the code associated with "LogActivity".
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/78b286d8-13f6-4a3a-8301-d3106343915b)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a1d308a8-e808-4dc8-9e56-d002ad7fb770)
+
+The insecure aspect of the code lies in the logging mechanism used within the catch block. Specifically, it logs the credit card information directly to the log file using Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString()). This means that if an error occurs during the transaction process, the credit card information entered by the user will be logged without any encryption or obfuscation. This poses a significant security risk as it exposes sensitive credit card data to potential attackers who may gain unauthorized access to the log files.
 
 For "realism" I looked up 100% fake credit card numbers to test with from [BlueSnap Developers](https://developers.bluesnap.com/reference/test-credit-cards).
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/20f11aa6-25f8-40dc-a8e5-0ee7943b0701)
 
+I navigated to "1. Insecure Logging" and entered the fake credit card number.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/fa68a2a6-0aac-45af-9a15-bca27ba57fa6)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f2a53210-39c5-4526-9b5b-4e60259b3dbd)
+
+Using **adb logcat**, you can view the Android logs.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c1809cf9-fdb8-487b-9a9a-1caa07bda114)
+
+Note that you see the fake credit card information logged!
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/26a6b078-2eb4-48a1-bca9-c1e04ad3d5fb)
 
 
 
