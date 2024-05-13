@@ -12,7 +12,7 @@ By practicing with DIVA, individuals can improve their ability to identify secur
 The source code for DIVA Android can be found [here](https://github.com/payatu/diva-android) on GitHub by payatu. The original compiled DIVA apk can be found [here](https://github.com/0xArab/diva-apk-file) on Github by 0xArab, but for completeness, I've I've included a copy in this repo.
 
 Here I'll be detailing my process as I assess all thirteen (13) vulnerabilities availabe within DIVA.
-0. [Environment Configuration and Setup](#environment-configuration-and-setup)
+- [Environment Configuration and Setup](#environment-configuration-and-setup)
 1. [Insecure Logging](#insecure-logging)
 2. [Hardcoding Issues - Part 1](#hardcoding-issues---part-1)
 3. [Insecure Data Storage - Part 1](#insecure-data-storage---part-1)
