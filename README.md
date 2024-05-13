@@ -65,7 +65,10 @@ The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating do
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a1d308a8-e808-4dc8-9e56-d002ad7fb770)
 
-The vulnerability in this code lies in the insecure logging of credit card information. Specifically, in the `catch` block, the credit card information entered by the user (`cctxt.getText().toString()`) is directly logged to the Android system log using `Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString())`.
+The vulnerability in this code lies in the insecure logging of credit card information. Specifically, in the `catch` block, the credit card information entered by the user (`cctxt.getText().toString()`) is directly logged to the Android system log using:
+```java
+Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString())`
+```
 
 This poses a significant security risk because sensitive information, such as credit card details, should never be logged in plaintext due to the potential for unauthorized access. If an attacker gains access to the device or the log files, they could easily retrieve the credit card information and misuse it.
 
@@ -95,18 +98,6 @@ Note that you see the fake credit card information logged!
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/26a6b078-2eb4-48a1-bca9-c1e04ad3d5fb)
 
 ---
-### Conclusion ###
-
-Insecure logging can pose significant security risks, as it may lead to data breaches, privacy violations, and regulatory compliance issues. To mitigate these risks, developers should follow best practices for secure logging, including:
-- Avoiding logging sensitive information unless absolutely necessary.
-- Encrypting sensitive data before writing it to log files.
-- Implementing access controls to restrict access to log files.
-- Using conditional logging to ensure that sensitive information is not logged in release builds.
-- Regularly reviewing and auditing log files for security vulnerabilities.
-
-By addressing these concerns, developers can help protect user data and maintain the security of their Android applications.
-
----
 ---
 ## Hardcoding Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
@@ -123,7 +114,7 @@ Common examples of hardcoded issues in applications include:
 
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "HardcodeActivity".
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e0ab17aa-f658-4506-917d-fbdb5d61b922)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/2a1ee036-7c94-4619-9bb4-d5cc09955b68)
 
 The vulnerability in this code lies in the hardcoding of the secret key directly within the application code. Specifically, the secret key "vendorsecretkey" is hardcoded in the `if` statement:
 
@@ -138,8 +129,6 @@ To address this vulnerability, developers should avoid hardcoding sensitive info
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
 
 ---
 ---
@@ -154,10 +143,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
-
-
 
 ---
 ---
@@ -171,9 +156,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ---
 ### Proof of Concept ###
-
----
-### Conclusion ###
 
 
 
@@ -190,9 +172,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
-
 
 
 ---
@@ -207,9 +186,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ---
 ### Proof of Concept ###
-
----
-### Conclusion ###
 
 
 
@@ -226,9 +202,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
-
 
 
 ---
@@ -243,9 +216,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ---
 ### Proof of Concept ###
-
----
-### Conclusion ###
 
 
 
@@ -262,9 +232,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
-
 
 
 ---
@@ -279,9 +246,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ---
 ### Proof of Concept ###
-
----
-### Conclusion ###
 
 
 
@@ -298,9 +262,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
-
 
 
 ---
@@ -316,9 +277,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ---
 ### Proof of Concept ###
 
----
-### Conclusion ###
-
 
 
 ---
@@ -333,9 +291,6 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ---
 ### Proof of Concept ###
-
----
-### Conclusion ###
 
 
 
