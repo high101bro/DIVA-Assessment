@@ -57,6 +57,8 @@ Common examples include:
 ---
 ### Assessment ###
 
+**Objective**: Find out what is being logged where/how and the vulnerable code.
+
 Within Kali, I decompileed the APK with jadx-gui.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cfb2f8d0-35e1-457c-a790-c49dbb34b482)
@@ -83,13 +85,13 @@ By following these practices, developers can prevent the exposure of sensitive i
 ---
 ### Proof of Concept ###
 
-For "realism" I looked up 100% fake credit card numbers to test with from [BlueSnap Developers]
+For a bit of "realism" I looked up 100% fake credit card numbers to test with from [BlueSnap Developers]... doesn't matter though.
 
 I navigated to "1. Insecure Logging" and entered the fake credit card number.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/fa68a2a6-0aac-45af-9a15-bca27ba57fa6)
 
-Using **adb logcat**, you can view the Android logs.
+Using **adb logcat**, you can view the Android system logs.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c1809cf9-fdb8-487b-9a9a-1caa07bda114)
 
@@ -112,6 +114,8 @@ Common examples of hardcoded issues in applications include:
 ---
 ### Assessment ###
 
+**Objective**: Find out what is hardcoded and where.
+
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "HardcodeActivity".
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/2a1ee036-7c94-4619-9bb4-d5cc09955b68)
@@ -129,19 +133,64 @@ To address this vulnerability, developers should avoid hardcoding sensitive info
 ---
 ### Proof of Concept ###
 
+From the above code assessment, you'll see that the hardcoded password is "vendorsecretkey".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ac25ea53-f8f8-4b74-a8b9-93a1f1fb8e8c)
+
 
 ---
 ---
 ## Insecure Data Storage - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+Insecure data storage refers to the practice of storing sensitive information in an unprotected or vulnerable manner, making it susceptible to unauthorized access or disclosure. In the context of Android applications, insecure data storage vulnerabilities typically involve storing sensitive data such as passwords, API keys, personal information, or financial data in plaintext or in inadequately secured storage locations.
+
+Common examples of insecure data storage vulnerabilities in Android applications include:
+- **Shared Preferences**: Storing sensitive information using the SharedPreferences API without proper encryption or access controls can expose the data to other applications or unauthorized users.
+- **SQLite Databases**: Storing sensitive data in SQLite databases without encryption or proper access controls can lead to unauthorized access if the device is compromised.
+- **External Storage**: Storing sensitive data on external storage such as the SD card without encryption can expose the data to other apps or users with physical access to the device.
+- **Logs**: Logging sensitive information such as passwords or credit card numbers without proper encryption or redaction can expose the data to unauthorized users if the log files are accessed.
+- **Caching Mechanisms**: Storing sensitive data in caches without proper encryption or access controls can expose the data to other apps or users with access to the device.
+
+By addressing insecure data storage vulnerabilities, developers can protect sensitive user data from unauthorized access and enhance the overall security of their Android applications.
 
 ---
 ### Assessment ###
 
+**Objective**: Find out where/how the credentials are being stored and the vulnerable code.
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InsecureDataStorage1Activity".
+
+The vulnerability in the code lies in the insecure storage of sensitive information, specifically the username and password, using SharedPreferences without encryption. Here's where the vulnerability resides within the code:
+
+```java
+// Storing Data in SharedPreferences
+spedit.putString("user", usr.getText().toString());
+spedit.putString("password", pwd.getText().toString());
+```
+
+These lines of code store the username and password entered by the user directly into the SharedPreferences without any form of encryption or protection. As a result, the sensitive information (password in particular) is stored in plaintext, making it vulnerable to unauthorized access if the device or SharedPreferences file is compromised.
+
+SharedPreferences is not designed to securely store sensitive data such as passwords. While SharedPreferences provides a simple key-value storage mechanism, the data stored in SharedPreferences is not encrypted and can be easily accessed by other apps or users with root access to the device.
+
+As a result, if an attacker gains access to the device or the SharedPreferences file, they can easily retrieve the stored credentials and misuse them for unauthorized access or other malicious purposes.
+
+To address this vulnerability, developers should:
+- Use more secure storage mechanisms for sensitive data, such as the Android Keystore system for encryption keys or encrypted databases like SQLCipher for storing passwords and other sensitive information.
+- Avoid storing sensitive data like passwords in plaintext and always encrypt sensitive data before storing it on the device.
+- Implement proper access controls and encryption techniques to protect sensitive data from unauthorized access.
+- This one is a bit out of scope, but educate users about the importance of secure password management practices and encourage them to use strong, unique passwords for their accounts.
+
 ---
 ### Proof of Concept ###
+
+First I input my credentials into the app.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/87980328-883d-47ec-9682-c878b1b2a59c)
+
+From the code assessment above, we can **adb shell** and navigate to where the diva.apk stores the insecure file and view the stored credentials. First we list the package with `pm list packages | grep diva`, then use that to locate the file within `/data/data/jakhar.aseem.diva/shared_prefs/`. You'll discover that my password was stored in plaintext as **My_Super_Secure_Password!!!**.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e7b92264-513f-40c0-a3d6-6305f2d4e16f)
 
 
 ---
@@ -149,10 +198,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Insecure Data Storage - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -164,10 +215,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Insecure Data Storage - Part 3
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -179,10 +232,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Insecure Data Storage Part 4
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -194,10 +249,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Input Validation Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -209,10 +266,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Input Validation Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -224,10 +283,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Access Control Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -239,10 +300,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Access Control Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -254,10 +317,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Access Control Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -269,10 +334,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Hardcoding Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
@@ -284,10 +351,12 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Input Validation Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
-
 ---
 ### Assessment ###
+
+**Objective**: 
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
 
 ---
 ### Proof of Concept ###
