@@ -300,16 +300,53 @@ As the assessment identified, the credentials are stored within a temporary file
 ## Insecure Data Storage Part 4
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Insecure Data Storage - Part 1](#insecure-data-storage---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: Find out where/how the credentials are being stored and the vulnerable code.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InsecureDataStorage3Activity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/84fd38cb-065b-4e5f-877a-6523731b1df5)
+
+The vulnerability in this code lies in the insecure storage of credentials on external storage without proper encryption or access controls. Here's where the insecurity resides within the code:
+
+```java
+// Storing Credentials on External Storage
+File sdir = Environment.getExternalStorageDirectory();
+try {
+    File uinfo = new File(sdir.getAbsolutePath() + "/.uinfo.txt");
+    uinfo.setReadable(true);
+    uinfo.setWritable(true);
+    FileWriter fw = new FileWriter(uinfo);
+    fw.write(usr.getText().toString() + ":" + pwd.getText().toString() + "\n");
+    fw.close();
+    Toast.makeText(this, "3rd party credentials saved successfully!", 0).show();
+} catch (Exception e) {
+    Toast.makeText(this, "File error occurred", 0).show();
+    Log.d("Diva", "File error: " + e.getMessage());
+}
+```
+
+This code segment creates a file named ".uinfo.txt" on the external storage directory and writes the username and password entered by the user into this file. However, there are several insecurities:
+- **No Encryption**: The credentials are stored in plaintext, without any encryption. This makes them easily accessible to anyone with access to the external storage, such as other apps or users with physical access to the device.
+- **No Access Controls**: The file permissions are set to readable and writable for all users (`uinfo.setReadable(true);` and `uinfo.setWritable(true);`). This means that any app or user with access to the external storage can read or modify the credentials, increasing the risk of unauthorized access.
+- **No Secure Storage**: External storage is not a secure location for storing sensitive information like credentials. It's susceptible to various attacks, such as data leakage, theft, or unauthorized access.
+
+Overall, storing credentials in plaintext on external storage without encryption or access controls poses a significant security risk and should be avoided in favor of more secure storage mechanisms, such as the Android Keystore or encrypted databases.
 
 ---
 ### Proof of Concept ###
 
+First I input my credentials into the app.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/7faf8731-5d04-49b1-8ae5-f10fae94bc84)
+
+As the assessment detailed, the credentials are being stored in an external storage device. Within an **adb shell** of the android device, we can do a brute force search for this file using the `find` command to locate the file and view its contents. 
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a5038ef9-9e96-4fc3-b6ea-8e41a6ef495e)
 
 
 ---
@@ -317,16 +354,58 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Input Validation Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
+Input validation in Android applications involves verifying and sanitizing user inputs to ensure that they meet certain criteria, such as format, length, or range, before processing or using them. Proper input validation is crucial for preventing security vulnerabilities, such as injection attacks, data breaches, and unexpected behavior.
+
+Here are some key aspects of input validation in Android applications:
+- **Sanitizing Input**: Sanitize user inputs by removing or escaping any potentially harmful characters or sequences that could be used to exploit vulnerabilities, such as SQL injection, XSS (Cross-Site Scripting), or command injection.
+- **Validating Format**: Check that user inputs adhere to the expected format, such as email addresses, phone numbers, dates, or credit card numbers. Regular expressions (`Pattern` class in Java) can be used for pattern matching and validation.
+- **Limiting Input Length**: Enforce maximum length limits on text input fields to prevent buffer overflow vulnerabilities or denial-of-service attacks caused by excessively large inputs.
+- **Validating Range**: Ensure that numeric inputs fall within acceptable ranges to prevent numeric overflow or underflow, as well as to enforce business logic constraints.
+- **Handling Special Characters**: Be cautious with special characters, such as whitespace, newline characters, or control characters, which could lead to unexpected behavior or security vulnerabilities if not properly handled.
+- **Using Input Masks**: Implement input masks to guide users in entering data in the correct format (e.g., phone numbers, credit card numbers) and reduce the likelihood of input errors.
+- **Client-Side and Server-Side Validation**: Perform input validation both on the client-side (in the Android app) and the server-side (on the backend server) to provide defense-in-depth against attacks and ensure data integrity.
+- **Error Handling**: Provide meaningful error messages to users when validation fails, indicating why their input was rejected and how they can correct it. Avoid revealing sensitive information in error messages.
+- **Testing and Validation**: Thoroughly test input validation mechanisms to ensure they function correctly under various conditions, including edge cases and malicious inputs. Automated testing tools and manual testing can help identify vulnerabilities and weaknesses.
+
+By implementing robust input validation mechanisms, Android developers can enhance the security and reliability of their applications, reducing the risk of security breaches and ensuring a positive user experience.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: Try to access all user data without knowing any user name. There are three users by default and your task is to output data of all the three users with a single malicious search.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "SQLInjectionActivity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b290976c-ca17-4b35-abf8-a6d8b18cd928)
+
+Aside from the obvious credentials being in plaintext in the decompiled apk (this is out of scope for this exercise), there is a vulnerability in the provided code, specifically in the `search` method. 
+
+Here's the vulnerable section highlighted:
+
+```java
+Cursor cr = this.mDB.rawQuery("SELECT * FROM sqliuser WHERE user = '" + srchtxt.getText().toString() + "'", null);
+```
+
+In this line, the user input (`srchtxt.getText().toString()`) is directly concatenated into the SQL query string without proper sanitization or parameterization. This makes the application vulnerable to SQL injection attacks.
+
+In SQL injection attacks, attackers can manipulate the input to modify the intended SQL query or execute arbitrary SQL commands. For example, an attacker could input `' OR 1=1 --` as the username, which would cause the SQL query to return all records from the `sqliuser` table, effectively bypassing any authentication logic.
+
+To mitigate this vulnerability, developers should use parameterized queries or prepared statements to handle user input safely. Parameterized queries separate the SQL query from the user input, preventing attackers from injecting malicious SQL code.
+
+Here's an example of how to use parameterized queries in Android SQLite:
+
+```java
+Cursor cr = this.mDB.rawQuery("SELECT * FROM sqliuser WHERE user = ?", new String[]{srchtxt.getText().toString()});
+```
+
+In this version, the user input is passed as a parameter to the query, and the SQLite database engine handles the parameterization, ensuring that the input is treated as data and not as part of the SQL command. This approach prevents SQL injection vulnerabilities.
 
 ---
 ### Proof of Concept ###
 
+I input the `` OR 1=1 --' into the application search field and it dumps all the contents of the sqlite3 database, in this case the credentials, to the screen.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d168447f-3386-4083-a67d-8d7b185c8a60)
 
 
 ---
