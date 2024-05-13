@@ -257,16 +257,42 @@ Using sqlite3 commands, you can mount the database, numerate the tables, and vie
 ## Insecure Data Storage - Part 3
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Insecure Data Storage - Part 1](#insecure-data-storage---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: Find out where/how the credentials are being stored and the vulnerable code.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InsecureDataStorage3Activity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/78da7d70-3e74-4c3b-a271-07260b99e402)
+
+The vulnerability in this code lies in the insecure storage of credentials as plaintext files in the device's internal storage. Here's where the insecurity resides within the code:
+
+```java
+File uinfo = File.createTempFile("uinfo", "tmp", ddir);
+uinfo.setReadable(true);
+uinfo.setWritable(true);
+FileWriter fw = new FileWriter(uinfo);
+fw.write(usr.getText().toString() + ":" + pwd.getText().toString() + "\n");
+fw.close();
+```
+
+These lines of code create a temporary file named "uinfo.tmp" in the application's data directory and write the username and password entered by the user directly into this file as plaintext. Additionally, the file permissions are set to readable and writable, making the credentials accessible to other applications or users with access to the device.
+
+Storing sensitive information like usernames and passwords in plaintext files without encryption or proper access controls poses a significant security risk. If an attacker gains access to the device or the file system, they can easily retrieve the plaintext credentials and misuse them for unauthorized access or other malicious purposes.
 
 ---
 ### Proof of Concept ###
 
+First I input my credentials into the app.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ce730737-4b5e-4520-9a9a-4f3f00a291bb)
+
+As the assessment identified, the credentials are stored within a temporary file that contains both `uinfo` and `tmp` in the filename. Using **abd shell** we can navigate to the diva apk location and look for the inseucre file to file the credentials strored in plaintext.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/7e1dd8fa-11e8-4985-982c-7ad91345dd47)
 
 
 ---
