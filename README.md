@@ -137,6 +137,10 @@ From the above code assessment, you'll see that the hardcoded password is "vendo
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ac25ea53-f8f8-4b74-a8b9-93a1f1fb8e8c)
 
+Using **adb shell**, you can identify where the files are stored, and identified the insecure file containing the credentials:
+
+![Screenshot 2024-05-13 130112](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d314013a-574d-4584-8685-f312cf21cfcd)
+
 
 ---
 ---
