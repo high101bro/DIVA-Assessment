@@ -511,7 +511,7 @@ For reference, this is how the user is inteded to obtain their API key.
 
 Using Drozer to assist in analyzing this - I will be using the Drozer Docker image and will outline how to have Drozer within Docker to be able to access the emulated Android device within Android Studio. Also, download the drozer-agent.apk that is to be installed on the emulated Android device from [WithSecureLab's GitHub](https://github.com/WithSecureLabs/drozer-agent/releases). Used **adb push** to upload the apk to the emulated Android device. 
 
-| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ceadb6b3-b49d-43aa-8b8f-29e8f3736436) |
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ceadb6b3-b49d-43aa-8b8f-29e8f3736436)
 
 From the emulated Android device within Android Studio, launch the drozer app. Once it launches, you’ll need to turn on the Embedded Server by click on the button on the lower right. 
 
