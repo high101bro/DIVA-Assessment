@@ -509,13 +509,56 @@ For reference, this is how the user is inteded to obtain their API key.
 | --- | --- |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/8c1bf9cc-397c-4fd8-8380-e39ea7409ea7) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/0d52bdf4-d7f4-4fdd-9c2d-01b8589966ab) |
 
-Using drozer to assist in analyzing this. Download the drozer-agent.apk that is to be installed on the emulated Android device from [WithSecureLab's GitHub](https://github.com/WithSecureLabs/drozer-agent/releases). Used **adb push** to upload the apk to the emulated Android device. Then navigated to the drozer apk and lauched the server.
+Using Drozer to assist in analyzing this - I will be using the Drozer Docker image and will outline how to have Drozer within Docker to be able to access the emulated Android device within Android Studio. Also, download the drozer-agent.apk that is to be installed on the emulated Android device from [WithSecureLab's GitHub](https://github.com/WithSecureLabs/drozer-agent/releases). Used **adb push** to upload the apk to the emulated Android device. 
 
-
-|     |     |
-| --- | --- |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ceadb6b3-b49d-43aa-8b8f-29e8f3736436) |
+
+From the emulated Android device within Android Studio, launch the drozer app. Once it launches, you’ll need to turn on the Embedded Server by click on the button on the lower right. 
+
+|  Finding Drozer  | Starting Embedded Server   |
+| --- | --- |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ad7c9650-b664-4a83-9713-8bf0fe152489) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cef52bd5-04c0-4785-be49-fbb90b15e52c) |
+
+The drozer agent on the emulated Android device will start listening on 127.0.0.1:31415 on the local kali machine. This is the port that we’ll later need to connect to from drozer running within docker. We’ll have to do some port remapping later using socat to have it available on 0.0.0.0:31415 so that docker can access it. 
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6b3bc424-57b4-4271-8ca7-65c2e095b52c)
+
+Note that it's listening on loopback 127.0.0.1
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f93b51fe-07b1-4f3b-8e36-92be18d22522)
+
+Now use socat to remap 127.0.0.1:31416 to 0.0.0.0:31415 - this is so docker can access it. 
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/756db55f-0bc0-48cd-ab72-aec5969dc4a0)
+
+Note now that we’re now using socat to listen on 0.0.0.0:31415, which is being passed to 127.0.0.1:31416, which abd is forwarding to the drozer agent at 127.0.0.1:31415 on the emulated Android device. 
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e8f7355f-8869-4875-9c79-f5d55baa0f4e)
+
+Starting Drozer within Docker - note, you need to have docker installed... Note that if the image has not been previously downloaded, docker will automatically do so. 
+- docker run -it --add-host host.docker.internal:host-gateway yogehi/drozer_docker 
+
+In the docker container’s terminal, use the drozer console command to connect to the drozer embedded server we installed/started on the emulated Android device within Android Studio. 
+- drozer console connect --server host.docker.internal
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/9d93b9c6-49d3-42a3-baa0-e0a27319232f)
+
+Once connected, we can now user Drozer to analyze the DIVA app hosted on the emulated Android device, the path looks like Drozer Docker container -> socat -> adb forwarder -> emualted Android drivie -> drozer agent apk [embedded server].
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c94ce2a4-ab45-40d6-a8e0-0570060a7f5c)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e0d60d8b-0abc-4717-96f8-ef2ca49f422d)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/24e15471-20ca-4af9-b1ad-e58157ae848c)
+
+The following command auto-launched the app and showed the Vendor API Credentials. 
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/1409be4f-0237-4c3d-8c0c-990424b7906a)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6b3a5d86-8f22-4894-b68e-df7cd0abfbad)
+
+The following command auto-launched the app and showed the Tveeter API Credentials. 
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/07dcea9a-dae2-4761-af59-a23ee609db86)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a98dd8a4-1a2d-4818-a38d-28e30629d52d)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/da214d88-8071-439c-9c8c-33ff1e2525a6)
 
 
 
