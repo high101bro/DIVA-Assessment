@@ -555,13 +555,11 @@ The following command auto-launched the app and showed the Vendor API Credential
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/1409be4f-0237-4c3d-8c0c-990424b7906a)
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6b3a5d86-8f22-4894-b68e-df7cd0abfbad)
 
-The following command auto-launched the app and showed the Tveeter API Credentials. 
+The following command auto-launched the app and showed the Tveeter API Credentials - to which I did not register for...
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/07dcea9a-dae2-4761-af59-a23ee609db86)
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a98dd8a4-1a2d-4818-a38d-28e30629d52d)
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/da214d88-8071-439c-9c8c-33ff1e2525a6)
 
-
-
+Anyways, the point was that you can use 3rd party applications to get access to the API keys. Done.
 
 ---
 ---
