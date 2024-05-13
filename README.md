@@ -215,7 +215,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 This time, the credentials are stored within an sqlite3 local database.
 
-The vulnerability in this code lies in the insecure storage of credentials in an SQLite database without proper parameterization or encryption. Here's where the insecurity is highlighted within the code:
+The vulnerability in this code lies in the insecure storage of credentials in an SQLite database without proper parameterization or encryption. Here's where the insecurity is within the code:
 
 ```java
 public void saveCredentials(View view) {
@@ -380,7 +380,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 Aside from the obvious credentials being in plaintext in the decompiled apk (this is out of scope for this exercise), there is a vulnerability in the provided code, specifically in the `search` method. 
 
-Here's the vulnerable section highlighted:
+Here's the vulnerable section:
 
 ```java
 Cursor cr = this.mDB.rawQuery("SELECT * FROM sqliuser WHERE user = '" + srchtxt.getText().toString() + "'", null);
@@ -400,6 +400,8 @@ Cursor cr = this.mDB.rawQuery("SELECT * FROM sqliuser WHERE user = ?", new Strin
 
 In this version, the user input is passed as a parameter to the query, and the SQLite database engine handles the parameterization, ensuring that the input is treated as data and not as part of the SQL command. This approach prevents SQL injection vulnerabilities.
 
+Alternatively, you can connect to the `sqlite3` database and with **adb shell** and collect all the credentials as the datase is also insecure. That said, this part is out of scope.
+
 ---
 ### Proof of Concept ###
 
@@ -407,22 +409,54 @@ I input the `` OR 1=1 --' into the application search field and it dumps all the
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d168447f-3386-4083-a67d-8d7b185c8a60)
 
+Alternatively, you can connect to the `sqlite3` database and with **adb shell** and collect all the credentials as the datase is also insecure. That said, this part is out of scope.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/bd08d219-18a9-4a90-a87c-1b3da193d874)
+
+Oh, another way too is to export the sqlite3 database using `adb pull` to the kali host to run `sqlmap` against it. This is particularly useful if the simple `' OR 1=1 --` does not work and you're looking to use more complex sql injection strings.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/078c6df5-8619-4e55-8d9b-bc2f33a571c5)
+
+A bit out of scope again, but wanted to test with sqlmap regardless.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/53058c29-1ecc-47f3-989e-2f8bf71b55ba)
+
 
 ---
 ---
 ## Input Validation Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Input Validation Issues - Part 1](#input-validation-issues---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: Try accessing any sensitive information apart from a web URL.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InputValidation2URISchemeActivity".
+
+Yes, there is a vulnerability in the provided code. 
+
+The vulnerability lies in the `get()` method, specifically in the following line:
+
+```java
+wview.loadUrl(uriText.getText().toString());
+```
+
+This line loads a URL into a `WebView` directly based on user input (`uriText.getText().toString()`). This can lead to security risks such as open redirect vulnerabilities or the potential for loading malicious content from untrusted sources.
+
+An attacker could exploit this vulnerability by providing a malicious URL as input, potentially leading to attacks such as phishing or cross-site scripting (XSS) if the `WebView` does not properly sanitize or restrict the URLs it loads.
+
+To mitigate this vulnerability, input validation and sanitization should be performed on the user-provided URL before loading it into the `WebView`. Additionally, the app should enforce a strict policy on which URLs can be loaded to prevent open redirects and other security risks.
 
 ---
 ### Proof of Concept ###
 
+Inputting a previous file identified before as having credentials.
+|   |   |  |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a6d785df-7deb-4a44-b4f3-e2c48fff1477) |
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/88e55c42-a3e0-47fe-a678-6e4250c1e8a6) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/00624099-7227-4438-866f-4e277590f57a) |
 
 
 ---
