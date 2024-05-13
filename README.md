@@ -28,7 +28,10 @@ Here I'll be detailing my process as I assess all thirteen (13) vulnerabilities 
 12. [Hardcoding Issues - Part 2](#hardcoding-issues---part-2)
 13. [Input Validation Issues - Part 3](#input-validation-issues---part-3)
 
+The guide I initially used for training can be found [here](https://can-ozkan.medium.com/damn-insecure-vulnerable-application-diva-apk-walkthrough-66ce37ae8b50) by Can Özkan. They provided a great walkthrough, to which I expanded upon below.
 
+---
+---
 ## Environment Configuration and Setup
 [Back to Table of Contents](#table-of-contents)
 
@@ -38,34 +41,43 @@ My environment consists of a laptop running Windows 11, with Kali running with W
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/665477b7-8f83-4d19-b336-ac2fc03df27d)
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e618f7dc-c547-4c15-81d6-ba5f434495fc)
 
-
+---
+---
 ## Insecure Logging
 [Back to Table of Contents](#table-of-contents)
 
-Insecure logging refers to the practice of storing sensitive or confidential information in log files without adequate protection. This could include usernames, passwords, API keys, or other personally identifiable information (PII). Insecure logging can lead to serious security risks if these log files are accessed by unauthorized users, potentially exposing sensitive data and compromising user privacy. It's essential for developers to implement proper logging mechanisms, including encryption and access controls, to ensure the security of log files and prevent unauthorized access to sensitive information.
+**Insecure logging** refers to the practice of storing sensitive or confidential information in log files without adequate protection. Insecure logging can lead to serious security risks if these log files are accessed by unauthorized users, potentially exposing sensitive data and compromising user privacy. It's essential for developers to implement proper logging mechanisms, including encryption and access controls, to ensure the security of log files and prevent unauthorized access to sensitive information.
 
-Insecure logging can pose significant security risks, as it may lead to data breaches, privacy violations, and regulatory compliance issues. To mitigate these risks, developers should follow best practices for secure logging, including:
-- Avoiding logging sensitive information unless absolutely necessary.
-- Encrypting sensitive data before writing it to log files.
-- Implementing access controls to restrict access to log files.
-- Using conditional logging to ensure that sensitive information is not logged in release builds.
-- Regularly reviewing and auditing log files for security vulnerabilities.
-
-By addressing these concerns, developers can help protect user data and maintain the security of their Android applications.
+Common examples include:
+- Logging sensitive data: Developers may inadvertently include sensitive information such as usernames, passwords, API keys, or personally identifiable information (PII) in log messages.
+- Logging without encryption: Logging mechanisms may not encrypt the data before writing it to log files, making it vulnerable to interception if accessed by unauthorized parties.
+- Failure to restrict access: Log files may be accessible to other applications or users on the device, increasing the risk of unauthorized access to sensitive information.
+- Logging in release builds: Developers sometimes forget to disable or remove logging statements in release builds of their applications, potentially exposing sensitive data to users or attackers.
 
 ---
+### Assessment ###
 
 Within Kali, I decompileed the APK with jadx-gui.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cfb2f8d0-35e1-457c-a790-c49dbb34b482)
 
-The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating down through the tree you'll find the code associated with "LogActivity".
+The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating down through the tree you'll find the vulnerable code associated with "LogActivity".
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a1d308a8-e808-4dc8-9e56-d002ad7fb770)
 
-### Assessment ###
-The insecure aspect of the code lies in the logging mechanism used within the catch block. Specifically, it logs the credit card information directly to the log file using **Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString())**. This means that if an error occurs during the transaction process, the credit card information entered by the user will be logged without any encryption or obfuscation. This poses a significant security risk as it exposes sensitive credit card data to potential attackers who may gain unauthorized access to the log files.
+The vulnerability in this code lies in the insecure logging of credit card information. Specifically, in the `catch` block, the credit card information entered by the user (`cctxt.getText().toString()`) is directly logged to the Android system log using `Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString())`.
 
+This poses a significant security risk because sensitive information, such as credit card details, should never be logged in plaintext due to the potential for unauthorized access. If an attacker gains access to the device or the log files, they could easily retrieve the credit card information and misuse it.
+
+To address this vulnerability, developers should avoid logging sensitive information, especially in plaintext. Instead, they should implement secure logging practices such as:
+
+- Logging only necessary information for debugging purposes.
+- Ensuring that sensitive data is properly obfuscated or encrypted before being logged.
+- Using logging frameworks that support secure logging features, such as log redaction or masking of sensitive information.
+
+By following these practices, developers can prevent the exposure of sensitive information and enhance the security of their applications.
+
+---
 ### Proof of Concept ###
 
 For "realism" I looked up 100% fake credit card numbers to test with from [BlueSnap Developers]
@@ -82,78 +94,248 @@ Note that you see the fake credit card information logged!
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/26a6b078-2eb4-48a1-bca9-c1e04ad3d5fb)
 
+---
+### Conclusion ###
 
+Insecure logging can pose significant security risks, as it may lead to data breaches, privacy violations, and regulatory compliance issues. To mitigate these risks, developers should follow best practices for secure logging, including:
+- Avoiding logging sensitive information unless absolutely necessary.
+- Encrypting sensitive data before writing it to log files.
+- Implementing access controls to restrict access to log files.
+- Using conditional logging to ensure that sensitive information is not logged in release builds.
+- Regularly reviewing and auditing log files for security vulnerabilities.
 
+By addressing these concerns, developers can help protect user data and maintain the security of their Android applications.
+
+---
+---
 ## Hardcoding Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/182f37be-fe48-4f01-9794-39b1d9590e74)
+**Hardcoding Issues** in Android applications refer to the practice of embedding sensitive information directly into the source code or resources of the application. This presents a significant security risk because anyone with access to the application's code can easily extract these hardcoded values, potentially leading to unauthorized access or misuse of sensitive data.
 
+Common examples of hardcoded issues in applications include:
+- API Keys: Embedding API keys directly into the source code makes them vulnerable to extraction by decompiling the application, exposing them to potential misuse or abuse.
+- Passwords and Credentials: Storing passwords or other sensitive credentials directly in the code or resources can lead to security breaches if the application is compromised.
+- URLs and Endpoints: Hardcoding URLs or endpoints for API calls without proper encryption or obfuscation can expose the backend infrastructure to potential attacks, such as man-in-the-middle (MITM) attacks or unauthorized access.
 
+---
+### Assessment ###
+
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "HardcodeActivity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e0ab17aa-f658-4506-917d-fbdb5d61b922)
+
+The vulnerability in this code lies in the hardcoding of the secret key directly within the application code. Specifically, the secret key "vendorsecretkey" is hardcoded in the `if` statement:
+
+```java
+if (hckey.getText().toString().equals("vendorsecretkey")) {
+```
+
+This means that anyone who decompiles the application or inspects the source code can easily identify the secret key. Consequently, an attacker could extract the key and gain unauthorized access to the application's sensitive functionality or data.
+
+To address this vulnerability, developers should avoid hardcoding sensitive information like secret keys directly into the application code. Instead, they should use secure storage mechanisms or external configuration files to store such sensitive data, thereby reducing the risk of exposure to potential attackers.
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
+
+---
+---
 ## Insecure Data Storage - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/665088df-be89-436e-a6f6-ba01c1dca27b)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Insecure Data Storage - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/441b3a0d-1e81-4a40-8272-833f378fc8f9)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Insecure Data Storage - Part 3
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/609f9220-bd84-4847-a16c-92dfc8867b6e)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Insecure Data Storage Part 4
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b93ccd74-df1a-4a51-9156-d94cf7eda838)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Input Validation Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6a90ec27-9dab-4c53-8b5a-cbc79cf42bef)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Input Validation Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/97441cd3-5245-4309-a71d-fa3c70c851ab)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Access Control Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ed407483-a371-4fcd-ae2b-7dbc6d5dbc97)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Access Control Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b1d89686-aa9f-468e-8422-eae1a692143f)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Access Control Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f6a9357d-daa1-4b44-b640-e57f502abfa4)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Hardcoding Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/1833520b-cd56-4c0c-a73f-4e3672dc0884)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
+
+---
+---
 ## Input Validation Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/767233a8-e24e-4627-a8eb-83091cb3986f)
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+
+---
+### Assessment ###
+
+---
+### Proof of Concept ###
+
+---
+### Conclusion ###
 
 
 
