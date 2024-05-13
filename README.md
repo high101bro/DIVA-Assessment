@@ -52,11 +52,9 @@ The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating do
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a1d308a8-e808-4dc8-9e56-d002ad7fb770)
 
-The insecure aspect of the code lies in the logging mechanism used within the catch block. Specifically, it logs the credit card information directly to the log file using Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString()). This means that if an error occurs during the transaction process, the credit card information entered by the user will be logged without any encryption or obfuscation. This poses a significant security risk as it exposes sensitive credit card data to potential attackers who may gain unauthorized access to the log files.
+- Assessment: The insecure aspect of the code lies in the logging mechanism used within the catch block. Specifically, it logs the credit card information directly to the log file using **Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString())**. This means that if an error occurs during the transaction process, the credit card information entered by the user will be logged without any encryption or obfuscation. This poses a significant security risk as it exposes sensitive credit card data to potential attackers who may gain unauthorized access to the log files.
 
 For "realism" I looked up 100% fake credit card numbers to test with from [BlueSnap Developers]
-
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/20f11aa6-25f8-40dc-a8e5-0ee7943b0701)
 
 I navigated to "1. Insecure Logging" and entered the fake credit card number.
 
