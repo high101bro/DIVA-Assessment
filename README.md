@@ -188,9 +188,9 @@ First I input my credentials into the app.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/87980328-883d-47ec-9682-c878b1b2a59c)
 
-From the code assessment above, we can **adb shell** and navigate to where the diva.apk stores the insecure file and view the stored credentials. First we list the package with `pm list packages | grep diva`, then use that to locate the file within `/data/data/jakhar.aseem.diva/shared_prefs/`. You'll discover that my password was stored in plaintext as **My_Super_Secure_Password!!!**.
+From the code assessment above, we can **adb shell** and navigate to where the diva.apk stores the insecure file and view the stored credentials. First we list the package with `pm list packages | grep diva`, then use that to navigate to where the apk stores files at `/data/data/jakhar.aseem.diva/shared_prefs/`. You'll identify that my password was stored as plaintext in `jakhar.aseem.diva_preferences.xml` as **My_Super_Insecure_Password!!!**.
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/e7b92264-513f-40c0-a3d6-6305f2d4e16f)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/3d987172-7196-4d6e-b28f-e3a090a32ba0)
 
 
 ---
@@ -198,16 +198,54 @@ From the code assessment above, we can **adb shell** and navigate to where the d
 ## Insecure Data Storage - Part 2
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Insecure Data Storage - Part 1](#insecure-data-storage---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: Find out where/how the credentials are being stored and the vulnerable code.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InsecureDataStorage2Activity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/dc129d15-bf55-46a4-a3f0-1aba61692cca)
+
+This time, the credentials are stored within an sqlite3 local database.
+
+The vulnerability in this code lies in the insecure storage of credentials in an SQLite database without proper parameterization or encryption. Here's where the insecurity is highlighted within the code:
+
+```java
+public void saveCredentials(View view) {
+    EditText usr = (EditText) findViewById(R.id.ids2Usr);
+    EditText pwd = (EditText) findViewById(R.id.ids2Pwd);
+    try {
+        // Insecure SQL query concatenation
+        this.mDB.execSQL("INSERT INTO myuser VALUES ('" + usr.getText().toString() + "', '" + pwd.getText().toString() + "');");
+        this.mDB.close();
+    } catch (Exception e) {
+        Log.d("Diva", "Error occurred while inserting into database: " + e.getMessage());
+    }
+    Toast.makeText(this, "3rd party credentials saved successfully!", 0).show();
+}
+```
+
+The vulnerability lies in the insecure SQL query concatenation used to insert user credentials into the SQLite database. User inputs (`usr.getText().toString()` and `pwd.getText().toString()`) are directly concatenated into the SQL query string, making the application vulnerable to SQL injection attacks. An attacker could manipulate the input fields to execute arbitrary SQL commands, leading to unauthorized data manipulation or extraction.
+
+To address this vulnerability, developers should use parameterized queries or prepared statements to safely insert user inputs into SQL queries. Additionally, sensitive data such as passwords should be stored securely, preferably using encryption techniques, to protect against unauthorized access even if the database is compromised.
 
 ---
 ### Proof of Concept ###
 
+First I input my credentials into the app.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/acd99889-91bf-436d-9de4-5abfd02f74cd)
+
+Using **adb shell**, navigate to where the diva databases are located. There you can cat the file and see the insecure credentials within this string `*!Ghigh101broMy_Super_Insecure_Password!!!` - though a bit messy.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/758d1dbe-945c-40e6-ab8b-bab2b90b97ed)
+
+Using sqlite3 commands, you can mount the database, numerate the tables, and view the contents which reveals that the credentials are stored in plaintext.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ab54fb14-62f5-4066-b299-1d4b4bb72276)
 
 
 ---
