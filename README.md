@@ -41,66 +41,96 @@ My environment consists of a laptop running Windows 11, with Kali running with W
 
 ## Insecure Logging
 [Back to Table of Contents](#table-of-contents)
+
+Insecure logging refers to the practice of storing sensitive or confidential information in log files without adequate protection. This could include usernames, passwords, API keys, or other personally identifiable information (PII). Insecure logging can lead to serious security risks if these log files are accessed by unauthorized users, potentially exposing sensitive data and compromising user privacy. It's essential for developers to implement proper logging mechanisms, including encryption and access controls, to ensure the security of log files and prevent unauthorized access to sensitive information.
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/96755daf-d90b-4292-b1a0-e5463fc31060)
+
+Within Kali, I decompileed the APK with jadx-gui.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cfb2f8d0-35e1-457c-a790-c49dbb34b482)
+
+The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating down through the tree you'll find the code associated with "LogActivity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/78b286d8-13f6-4a3a-8301-d3106343915b)
+
+For "realism" I looked up 100% fake credit card numbers to test with from [BlueSnap Developers](https://developers.bluesnap.com/reference/test-credit-cards).
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/20f11aa6-25f8-40dc-a8e5-0ee7943b0701)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f2a53210-39c5-4526-9b5b-4e60259b3dbd)
+
 
 
 ## Hardcoding Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/182f37be-fe48-4f01-9794-39b1d9590e74)
 
 
 ## Insecure Data Storage - Part 1
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/665088df-be89-436e-a6f6-ba01c1dca27b)
 
 
 ## Insecure Data Storage - Part 2
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/441b3a0d-1e81-4a40-8272-833f378fc8f9)
 
 
 ## Insecure Data Storage - Part 3
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/609f9220-bd84-4847-a16c-92dfc8867b6e)
 
 
 ## Insecure Data Storage Part 4
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b93ccd74-df1a-4a51-9156-d94cf7eda838)
 
 
 ## Input Validation Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6a90ec27-9dab-4c53-8b5a-cbc79cf42bef)
 
 
 ## Input Validation Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/97441cd3-5245-4309-a71d-fa3c70c851ab)
 
 
 ## Access Control Issues - Part 1
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ed407483-a371-4fcd-ae2b-7dbc6d5dbc97)
 
 
 ## Access Control Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b1d89686-aa9f-468e-8422-eae1a692143f)
 
 
 ## Access Control Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f6a9357d-daa1-4b44-b640-e57f502abfa4)
 
 
 ## Hardcoding Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/1833520b-cd56-4c0c-a73f-4e3672dc0884)
 
 
 ## Input Validation Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
+
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/767233a8-e24e-4627-a8eb-83091cb3986f)
 
 
