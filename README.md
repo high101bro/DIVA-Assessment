@@ -503,17 +503,21 @@ To mitigate this vulnerability, the app should implement proper access control c
 ---
 ### Proof of Concept ###
 
-Using drozer to assist in analyzing this. Download the drozer-agent.apk that is to be installed on the emulated Android device from [WithSecureLab's GitHub](https://github.com/WithSecureLabs/drozer-agent/releases). Used **adb push** to upload the apk to the emulated Android device.
-
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ceadb6b3-b49d-43aa-8b8f-29e8f3736436)
-
-
-
- 
+For reference, this is how the user is inteded to obtain their API key.
 
 |     |     |
 | --- | --- |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/8c1bf9cc-397c-4fd8-8380-e39ea7409ea7) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/0d52bdf4-d7f4-4fdd-9c2d-01b8589966ab) |
+
+Using drozer to assist in analyzing this. Download the drozer-agent.apk that is to be installed on the emulated Android device from [WithSecureLab's GitHub](https://github.com/WithSecureLabs/drozer-agent/releases). Used **adb push** to upload the apk to the emulated Android device. Then navigated to the drozer apk and lauched the server.
+
+
+|     |     |
+| --- | --- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ceadb6b3-b49d-43aa-8b8f-29e8f3736436) |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ad7c9650-b664-4a83-9713-8bf0fe152489) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cef52bd5-04c0-4785-be49-fbb90b15e52c) |
+
+
 
 
 ---
