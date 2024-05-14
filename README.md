@@ -786,6 +786,17 @@ Reference [Input Validation Issues - Part 1](#input-validation-issues---part-1) 
 
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InputValidation3Activity".
 
+I decided to lauch **adb logcat** to view the Android's system logs when I put in a wrong password to see if it reveals anything.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/76f982df-e2d3-486e-a7a0-b388e82bf0c6)
+
+- `adb logcat` outputs the following:
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/659d1a17-6ebf-44f0-8775-86de85d3e8cf)
+
+- Since I didn't see anything of interest in the Android system logs, and since the hint referenced 'a classic memory corruption vulnerability', I decided to check if there was a buffer overflow that I can exploit. That said, since computers work off 
+
+
 ---
 ### Proof of Concept ###
 
