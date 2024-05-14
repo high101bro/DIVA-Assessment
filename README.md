@@ -680,12 +680,85 @@ Worse yet... you could just drop the table and cause the DIVA Application to cra
 ## Hardcoding Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Hardcoding Issues - Part 1](#hardcoding-issues---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: Find out what is hardcoded and where.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "Hardcode2Activity".
+| Harcode2Activity Code | DivaJni Code | 
+| --------------------- | ------------ |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/82420584-7a99-47a0-831e-b23e8e8a9cc7) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a9ba9cb0-bc12-4243-88d6-509ab626e6f9)
+ |
+
+The vulnerable section of the code within Hardcode2Activity is:
+
+```java
+this.djni = new DivaJni();
+```
+
+This line instantiates a `DivaJni` object without dynamically retrieving sensitive information, such as API keys or credentials, from secure storage. Instead, the sensitive information is hardcoded directly into the `DivaJni` class or its native code implementation, making it easily accessible to anyone who reverse engineers the application.
+
+The vulnerable section of the code within DivaJni is:
+
+```java
+private static final String soName = "divajni";
+```
+
+Here, the name of the native library (`divajni`) is hardcoded directly into the Java class. This exposes the library name to potential attackers, making it easier for them to locate and analyze the native code for vulnerabilities or sensitive information. Hardcoding sensitive information like this can pose a security risk, especially if the library contains secrets or credentials.
+
+I've opted to use Ghidra to further decompile the DivaApplication.apk.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ed670f66-32c1-49e2-a1bf-5a7b7468d616)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/2898b59e-3504-470c-8536-ca97439df26d)
+
+Creating a 'New Project' called `DIVA App`.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/caa8fcd1-858b-49fe-b3b3-c9a901ae1bfa)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/7bfe532d-6775-47c9-bc15-d144c9699b0b)
+
+Then located the DivaApplication.apk within my Downloads directory via the GUI, and dragged & dropped the apk into the newly created Ghidra project called 'DIVA App'.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/bfe27b76-988e-4926-b582-bf9b6cbd0b75)
+
+The file apk will be imported.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/8e6a215f-a0b9-4e82-80ae-9d57fbdd176c)
+
+Changed the `Depth limit` to 10, then clicked on 'Rescan'. Followed by clicking the 'OK' button at the bottom when it finished.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/fee346a2-dbfe-4a31-8563-67fe984ef4be)
+
+The 'Batch Import Task' will start importing the apk and provide a summary.
+
+| Batch Import Task | Batch Import Summary |
+| ----------------- | -------------------- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d33dedb5-a4d2-4d3d-bdd2-667dc1d778a6) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d61f035f-44ba-4518-99ad-51f010f9024f) |
+
+If you click on the green Ghidra icon within the Tool Chest, it will lauch the Code Broswer.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/04d8753f-5f4a-4014-8ac8-103ce5e94db2)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/9febda53-620a-49e0-bc65-6a7b6895de3b)
+
+
+
+
+After looking through the code I noticed a library called libdivajni.so.
+
+Digging more into the code I identified a function called `Java_jakhar_aseem_diva_DivaJni_access()`, where the value `olsdfgad;lh` was hardcoded.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b32f97a4-4744-4c28-bda0-ded68c0aa1ac)
+
+I input the password `olsdfgad;lh` into the DIVA Application and was granted access... Note that it just provides you a message that the password was accepted and doesn't navigate you elsewhere.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/87fdbc9e-291b-465d-acab-1a0acf10760e)
+
+
 
 ---
 ### Proof of Concept ###
@@ -697,12 +770,14 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 ## Input Validation Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Input Validation Issues - Part 1](#input-validation-issues---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
 **Objective**: 
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InputValidation3Activity".
 
 ---
 ### Proof of Concept ###
