@@ -555,28 +555,67 @@ The following command auto-launched the app and showed the Vendor API Credential
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/1409be4f-0237-4c3d-8c0c-990424b7906a)
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6b3a5d86-8f22-4894-b68e-df7cd0abfbad)
 
-The following command auto-launched the app and showed the Tveeter API Credentials - to which I did not register for...
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/07dcea9a-dae2-4761-af59-a23ee609db86)
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a98dd8a4-1a2d-4818-a38d-28e30629d52d)
-
-Anyways, the point was that you can use 3rd party applications to get access to the API keys. Done.
-
 ---
 ---
 ## Access Control Issues - Part 2
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Access Control Issues - Part 1](#access-control-issues---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: You are able to access the Third Party app TVEETER API credentials after you have registered with Tveeter. The App requests you to register online and the vendor gives you pin, which you can use to register with the app. Now, try to access the API credentials from outside the app without knowing the PIN. This is a business logic problem so you may need to see the code.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "AccessControl2Activity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5d85f989-6be9-46e5-b294-fafbb96493b9)
+
+The vulnerability in the provided code is in the `viewAPICredentials()` method, specifically in the following line:
+
+```java
+i.putExtra(getString(R.string.chk_pin), chk_pin);
+```
+
+This line adds a boolean extra to the intent `i` with the key obtained from `getString(R.string.chk_pin)`. The key is likely derived from a string resource, but without context, it's unclear what value it holds
+The issue arises from the fact that the intent `i` is sent without proper validation or authorization checks. The app does not verify whether the user is authorized to view API credentials before sending the intent.
+
+Without proper access control checks, any user of the app can trigger this action and potentially view sensitive API credentials. This can lead to unauthorized access to sensitive information.
+
+To mitigate this vulnerability, access control checks should be implemented to ensure that only authorized users can view the API credentials. This could involve requiring authentication or enforcing specific permissions before allowing access to this functionality. Additionally, sensitive data such as API credentials should not be passed directly via intents without proper encryption or other security measures.
 
 ---
 ### Proof of Concept ###
 
+For reference, when you checkbox 'Register Now' and click on 'View Tveeter API Credentials', it will ask you to enter a pin (Screenshots 1 & 2). When you checkbox 'Already Registered' and click on 'View Tveeter API Credentials', it will show you the 'Twitter API Credentials' - I assume this part is a bug as I've never registered (Screenshots 3 & 4).
 
+| Screenshot 1 | Screenshot 2  | Screenshot 3 | Screenshot 4 |
+| --- | --- | --- | --- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/3856ac7d-d3a7-409f-8a33-1c8fcbb8b03d) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/0ecd0414-a8bd-4f1f-938c-a95ea0298613) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/7c3f10f9-b07e-4d6e-aeac-f1f097280cab) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6c6d0b51-6ce8-4aaf-98ff-45ca24542d05) |
+
+As the presumed intent is to bypass how the DIVA app verifies the pin and access the 'Tveeter API Credentials' externally, so we need to analyze the code to determine how pin validation is done. The vulnerable code above uses the value of 'chk_pin', and further searching for 'chk_pin' within jadx-gui reveals **<string name="chk_pin">check_pin</string>**.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/8feaa88c-4857-4575-af2a-fee275fed91b)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5b78d9f7-5b86-4ce6-8807-328dab51dd16)
+
+We're able to access the 'Tveeter API Credentials' externally using **adb shell** - presumably the intention was to view the credentials without ever registering [despite the "bug" mentioned above]. The following command will automatically launch the 'Tveeter API Credentials' section within the emualated Android device. Note that because we're suppose to provide a valid pin to view the 'Tveeter API Credentials', we need to pass 
+- adb shell am start -n jakhar.aseem.diva/.APICreds2Activity -a jakhar.aseem.diva.action.VIEW_CREDS2 --ez check_pin false
+- [be sure to reference the Note below the images...]
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/9685029c-b61b-476a-bea9-bcb3a2368c07)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/83a21615-dc83-4b5f-aaa9-d8d58ab1d928)
+
+Note: Hopefully you noticed that the --ez flag called was 'check_ping' and not 'chk_pin' (as shown in the 'AccessControl2Activity' code). This took a small bit of digging into - let's see if I can adequately describe why
+
+The discrepancy between the resource name 'chk_pin' and the value 'check_pin' found in the string resources suggests that the app is internally using 'check_pin' as the key to retrieve the boolean extra from the intent.
+
+When an app retrieves a string resource using `getString(R.string.chk_pin)`, it gets the value associated with the resource name 'chk_pin' defined in the XML resource files. However, the actual value of the resource is 'check_pin'.
+
+Therefore, when passing the boolean extra via adb shell command, you need to use the key 'check_pin' to match the actual value expected by the app internally. Using 'chk_pin' will not work because it does not match the key expected by the app to retrieve the extra value from the intent.
+
+In short, even though the resource name is 'chk_pin', the value associated with it is 'check_pin', which is the key expected by the app to retrieve the boolean extra. Hence, you need to use 'check_pin' in the adb shell command to ensure compatibility with the app's internal logic.
 
 ---
 ---
