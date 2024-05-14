@@ -733,33 +733,42 @@ Changed the `Depth limit` to 10, then clicked on 'Rescan'. Followed by clicking 
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/fee346a2-dbfe-4a31-8563-67fe984ef4be)
 
-The 'Batch Import Task' will start importing the apk and provide a summary.
+The 'Batch Import Task' will start importing the apk [this will take a moment... get a coffee and sit back...] and provide a summary afterwards.
 
 | Batch Import Task | Batch Import Summary |
 | ----------------- | -------------------- |
-| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d33dedb5-a4d2-4d3d-bdd2-667dc1d778a6) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d61f035f-44ba-4518-99ad-51f010f9024f) |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5151cce5-fc31-4083-bde3-4fa1fe634cf1) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d61f035f-44ba-4518-99ad-51f010f9024f) |
 
-If you click on the green Ghidra icon within the Tool Chest, it will lauch the Code Broswer.
+Within the 'Tree View' tab, navigate down to DIVA App -> DivaApplication.apk -> lib -> x86_64, and double-click on  libdivajni.so. This will open up the library in Ghidra's CodeBrowser. 
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/04d8753f-5f4a-4014-8ac8-103ce5e94db2)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/dc7aa846-4b14-46d8-bdfd-4b93a2b93a62)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/9febda53-620a-49e0-bc65-6a7b6895de3b)
+It will then prompt you to Analyze the code - click on 'Yes'.
 
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6caf4b97-6d48-4762-b4e7-57d47e527bc2)
 
+Then click on Analyze.
 
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/daa9e150-6c5e-4cce-9699-96cfe9e30d33)
 
-After looking through the code I noticed a library called libdivajni.so.
+Go ahead and explore the libdivajni.so library to see what you can identify as being hardcoded. Eventually I identied the following: on left side within the 'Symbol Tree' panel, expand the 'Functions' directory and click on 'Java_jakhar_aseem_diva_DivaJni_access' - click on it. You will be able to see the value `olsdfgad;lh` was hardcoded.
 
-Digging more into the code I identified a function called `Java_jakhar_aseem_diva_DivaJni_access()`, where the value `olsdfgad;lh` was hardcoded.
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/ea0b9778-98ad-4d24-b4ee-888aaab30160)
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b32f97a4-4744-4c28-bda0-ded68c0aa1ac)
+The issue with "olsdfgad;lh" being hardcoded within the native code of the `libdivajni.so` library is that it exposes a sensitive value directly in the compiled binary. This can lead to several security risks:
 
+1. **Revealing Sensitive Information**: Hardcoding sensitive information like passwords or keys directly into the code makes it easily accessible to anyone who can access the binary, such as reverse engineers or attackers.
 
+2. **Difficulty in Rotation or Updating**: If the hardcoded value needs to be changed (e.g., in case of a password rotation or key update), it requires modifying and recompiling the native code, which may not be feasible in all situations.
+
+3. **Increased Attack Surface**: Attackers can easily locate and extract the hardcoded value from the binary, enabling them to potentially exploit the application or gain unauthorized access to sensitive resources.
+
+To mitigate this issue, sensitive information should be stored securely and retrieved dynamically at runtime from a secure source, such as encrypted configuration files, secure storage, or server-side APIs. Hardcoding sensitive values directly into the code should be avoided whenever possible to reduce the risk of exposure and improve the overall security posture of the application.
 
 ---
 ### Proof of Concept ###
 
-I input the password `olsdfgad;lh`, as identified above through the assessment of the DivaApplication.apk within Ghidra, into the DIVA Application and was granted access... Note that it just provides you a message that the password was accepted and doesn't navigate you elsewhere.
+As identified within the assessment above, I input the password `olsdfgad;lh` into the DIVA Application and was granted access... Note that it just provides you a message that the password was accepted and doesn't navigate you elsewhere.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/87fdbc9e-291b-465d-acab-1a0acf10760e)
 
