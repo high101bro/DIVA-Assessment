@@ -721,7 +721,7 @@ Creating a 'New Project' called `DIVA App`.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/7bfe532d-6775-47c9-bc15-d144c9699b0b)
 
-Then located the DivaApplication.apk within my Downloads directory via the GUI, and dragged & dropped the apk into the newly created Ghidra project called 'DIVA App'.
+Then located the DivaApplication.apk within my Downloads directory via the GUI, and dragged & dropped the apk into the newly created Ghidra project called 'DIVA App'. It takes a moment complete 'Adding Source Files'. After finishing, I clicked on 'Batch' import.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/bfe27b76-988e-4926-b582-bf9b6cbd0b75)
 
@@ -754,16 +754,14 @@ Digging more into the code I identified a function called `Java_jakhar_aseem_div
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/b32f97a4-4744-4c28-bda0-ded68c0aa1ac)
 
-I input the password `olsdfgad;lh` into the DIVA Application and was granted access... Note that it just provides you a message that the password was accepted and doesn't navigate you elsewhere.
-
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/87fdbc9e-291b-465d-acab-1a0acf10760e)
-
 
 
 ---
 ### Proof of Concept ###
 
+I input the password `olsdfgad;lh`, as identified above through the assessment of the DivaApplication.apk within Ghidra, into the DIVA Application and was granted access... Note that it just provides you a message that the password was accepted and doesn't navigate you elsewhere.
 
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/87fdbc9e-291b-465d-acab-1a0acf10760e)
 
 ---
 ---
@@ -775,7 +773,7 @@ Reference [Input Validation Issues - Part 1](#input-validation-issues---part-1) 
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: This is a Missle Launch App. Spread love not War! DOS the Damn thing! Your objective here is to NOT find the code and then launch the missiles, rather it is to crash the app (and then find the root cause of the crash).
 
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InputValidation3Activity".
 
