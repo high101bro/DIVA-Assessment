@@ -622,17 +622,58 @@ In short, even though the resource name is 'chk_pin', the value associated with 
 ## Access Control Issues - Part 3
 [Back to Table of Contents](#table-of-contents)
 
+Reference [Access Control Issues - Part 1](#access-control-issues---part-1) for a description about this vulnerability.
+
 ---
 ### Assessment ###
 
-**Objective**: 
+**Objective**: This is a private notes application. You can create a PIN once and access your notes after entering the correct pin. Now, try to access the private notes from outside the app without knowing the PIN.
 
-In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "".
+In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "AccessControl3Activity".
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/de00d5d6-8c41-47d6-958c-cb1ecf5b42b8)
+
+The vulnerable section of the code resides within the addPin method:
+
+```java
+// Vulnerable section:
+spedit.putString(getString(R.string.pkey), pin);
+spedit.commit();
+```
+
+The vulnerability arises from the fact that anyone can add or change the PIN without proper authentication. There are no checks to ensure that the user setting the PIN is authorized to do so. Consequently, any user of the app can set their own PIN to access private notes, regardless of whether they should have access.
+
+To exploit this vulnerability, an attacker could simply navigate to the activity and set a PIN, granting themselves unauthorized access to private notes.
+
+To mitigate this vulnerability, proper authentication and authorization mechanisms should be implemented before allowing users to set or change the PIN. This could involve requiring users to authenticate themselves using a password or other means before allowing them to set the PIN. Additionally, access controls should be enforced to ensure that only authorized users can access private notes protected by the PIN.
 
 ---
 ### Proof of Concept ###
 
+As stated above, the app allows any user to set the pin. Then the user can click on 'Go To Private notes' to view the notes. That said, someone can access the contents externally using **adb shell** (example further below).
 
+| Create/Change Pin | Go To Private Notes | View of Private Notes |
+| --- | --- | --- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/cfd9aec7-bae2-402c-9a47-0bda2a067b27) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/acd08c10-7f70-4256-ba0b-85e266560015) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/9d8c91ae-0129-4d47-991d-4acab3fc7534) |
+
+Using **adb shell**, we can also access the notes without providing the pin.
+- content://jakhar.aseem.diva.provider.notesprovider/notes/
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/aae73c0e-7f96-4bb9-8f1a-70cedbdff25e)
+
+Alternatively, you can also access the 'DIVA Private Notes' using **adb shell**, then navigating to the insecure sqlite3 database and accessing them without credentials.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/79c23c40-899b-47e2-98a8-3cf5403210f6)
+
+With unauthenticated access to the sqlite3 divanotes.db database, and without 'authorization' you can insert new or modify the notes.
+| Database Insert | DIVA Private Notes |
+| --------------- | ------------------ |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f9187f25-0fdb-42a6-ab81-87de7093d553) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/7860a1d3-5c63-4aa3-bc5d-4d75bc91bd19) |
+
+Worse yet... you could just drop the table and cause the DIVA Application to crash when attempting to access the "DIVA Private Notes'.
+| Drop Table | DIVA Crash |
+| ---------- | ---------- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/3bf616b2-7612-4f6b-aaf0-da929a7121fd) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/61bfa8e1-1055-431f-81fe-efa2fd8d2b48) |
 
 ---
 ---
