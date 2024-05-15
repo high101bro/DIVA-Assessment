@@ -67,7 +67,7 @@ The jadx-gui appears, and I selected the DivaApplication.apk file. Navigating do
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a1d308a8-e808-4dc8-9e56-d002ad7fb770)
 
-The vulnerability in this code lies in the insecure logging of credit card information. Specifically, in the `catch` block, the credit card information entered by the user (`cctxt.getText().toString()`) is directly logged to the Android system log using:
+The vulnerability in this code resides within the insecure logging of credit card information. Specifically, in the `catch` block, the credit card information entered by the user (`cctxt.getText().toString()`) is directly logged to the Android system log using:
 ```java
 Log.e("diva-log", "Error while processing transaction with credit card: " + cctxt.getText().toString())`
 ```
@@ -120,7 +120,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/2a1ee036-7c94-4619-9bb4-d5cc09955b68)
 
-The vulnerability in this code lies in the hardcoding of the secret key directly within the application code. Specifically, the secret key "vendorsecretkey" is hardcoded in the `if` statement:
+The vulnerability in this code resides within the hardcoding of the secret key directly within the application code. Specifically, the secret key "vendorsecretkey" is hardcoded in the `if` statement:
 
 ```java
 if (hckey.getText().toString().equals("vendorsecretkey")) {
@@ -165,7 +165,7 @@ By addressing insecure data storage vulnerabilities, developers can protect sens
 
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InsecureDataStorage1Activity".
 
-The vulnerability in the code lies in the insecure storage of sensitive information, specifically the username and password, using SharedPreferences without encryption. Here's where the vulnerability resides within the code:
+The vulnerability in the code resides within the insecure storage of sensitive information, specifically the username and password, using SharedPreferences without encryption. Here's where the vulnerability resides within the code:
 
 ```java
 // Storing Data in SharedPreferences
@@ -215,7 +215,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 This time, the credentials are stored within an sqlite3 local database.
 
-The vulnerability in this code lies in the insecure storage of credentials in an SQLite database without proper parameterization or encryption. Here's where the insecurity is within the code:
+The vulnerability in this code resides within the insecure storage of credentials in an SQLite database without proper parameterization or encryption. Here's where the insecurity is within the code:
 
 ```java
 public void saveCredentials(View view) {
@@ -268,7 +268,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/78da7d70-3e74-4c3b-a271-07260b99e402)
 
-The vulnerability in this code lies in the insecure storage of credentials as plaintext files in the device's internal storage. Here's where the insecurity resides within the code:
+The vulnerability in this code resides within the insecure storage of credentials as plaintext files in the device's internal storage. Here's where the insecurity resides within the code:
 
 ```java
 File uinfo = File.createTempFile("uinfo", "tmp", ddir);
@@ -311,7 +311,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/84fd38cb-065b-4e5f-877a-6523731b1df5)
 
-The vulnerability in this code lies in the insecure storage of credentials on external storage without proper encryption or access controls. Here's where the insecurity resides within the code:
+The vulnerability in this code resides within the insecure storage of credentials on external storage without proper encryption or access controls. Here's where the insecurity resides within the code:
 
 ```java
 // Storing Credentials on External Storage
@@ -380,7 +380,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 Aside from the obvious credentials being in plaintext in the decompiled apk (this is out of scope for this exercise), there is a vulnerability in the provided code, specifically in the `search` method. 
 
-Here's the vulnerable section:
+The vulnerability in the code resides within the following section:
 
 ```java
 Cursor cr = this.mDB.rawQuery("SELECT * FROM sqliuser WHERE user = '" + srchtxt.getText().toString() + "'", null);
@@ -438,7 +438,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 Yes, there is a vulnerability in the provided code. 
 
-The vulnerability lies in the `get()` method, specifically in the following line:
+The vulnerability in the code resides within the `get()` method, specifically in the following line:
 
 ```java
 wview.loadUrl(uriText.getText().toString());
@@ -490,7 +490,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/910bd72d-5867-4404-889c-633fc89fd3f7)
 
-The vulnerability in the code lies in the `viewAPICredentials()` method.
+The vulnerability in the code resides within the `viewAPICredentials()` method.
 
 ```java
     i.setAction("jakhar.aseem.diva.action.VIEW_CREDS");
@@ -571,7 +571,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5d85f989-6be9-46e5-b294-fafbb96493b9)
 
-The vulnerability in the provided code is in the `viewAPICredentials()` method, specifically in the following line:
+The vulnerability in the code resides within the `viewAPICredentials()` method, specifically in the following line:
 
 ```java
 i.putExtra(getString(R.string.chk_pin), chk_pin);
@@ -633,7 +633,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/de00d5d6-8c41-47d6-958c-cb1ecf5b42b8)
 
-The vulnerable section of the code resides within the addPin method:
+The vulnerability in the code resides within the addPin method:
 
 ```java
 // Vulnerable section:
@@ -693,7 +693,7 @@ In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you ca
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/82420584-7a99-47a0-831e-b23e8e8a9cc7) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/a9ba9cb0-bc12-4243-88d6-509ab626e6f9)
  |
 
-The vulnerable section of the code within Hardcode2Activity is:
+The vulnerability in the code resides within the following sections:
 
 ```java
 this.djni = new DivaJni();
@@ -786,7 +786,27 @@ Reference [Input Validation Issues - Part 1](#input-validation-issues---part-1) 
 
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InputValidation3Activity".
 
-I decided to lauch **adb logcat** to view the Android's system logs when I put in a wrong password to see if it reveals anything - in this case eight (8) A characters.
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f9082d65-4d42-4aa1-9877-70a416d5a5fb)
+
+The vulnerability in the code potentially resides within the following section:
+
+```java
+EditText cTxt = (EditText) findViewById(R.id.ivi3CodeText);
+if (this.djni.initiateLaunchSequence(cTxt.getText().toString()) != 0) {
+    Toast.makeText(this, "Launching in T - 10 ...", 0).show();
+} else {
+    Toast.makeText(this, "Access denied!", 0).show();
+}
+```
+
+The vulnerability lies in the lack of input validation or sanitization on the data obtained from the `EditText` field (`cTxt`). The `initiateLaunchSequence` method of the `DivaJni` class is called with the string obtained from the `EditText` field as an argument. If this method does not properly handle or validate user input, it could be susceptible to various types of attacks, such as buffer overflow, command injection, or SQL injection.
+
+To address this vulnerability, input validation and sanitization should be implemented to ensure that only valid and expected input is passed to the `initiateLaunchSequence` method. This may involve validating the input format, length, and range, as well as sanitizing the input to remove any potentially malicious characters or sequences. Additionally, input from untrusted sources should be treated with caution and never directly passed to sensitive operations without proper validation and sanitization.
+
+---
+### Proof of Concept ###
+
+I decided to launch **adb logcat** to view the Android's system logs when I put in a wrong password to see if it reveals anything - in this case eight (8) A characters.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6fbe492f-78bf-43c9-b35e-5670957dd66d)
 
@@ -811,6 +831,8 @@ Submitted thirty-two (32) A characters as the password, and the DIVA Applicaiton
 | `abd logcat` (Android system logs) | Crashed DIVA App |
 | ---------------------------------- | ---------------- |
 | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/4f35a5d9-3ef7-4aba-a4a5-0eed007c7399) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c9770f0e-356c-4b03-aa8b-095fec55249d) |
+
+Before we go any further, from here on forward I will attempt to get a shell, which is out of scope for this task.
 
 Notice that a DEBUG enteries were output within the Android system logs, and that 'Fatal signal 11' when the DIVA App crashes - 0x41414141 is hex for AAAA.
 
@@ -854,17 +876,26 @@ TRIMMED //
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5e828d8a-fdc2-4131-8938-5227bcca66c2)
 
-In a separate terminal, use 'adb' to foward the emulated Android device's listening port of 4444 to the of 4444 on the kali host.
+In a separate terminal, use 'adb' to foward the emulated Android device's listening port of 4444 to the of 4444 on the kali host - note that I'm the root user.
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/271ddebd-b594-4aa2-a129-e6d989e93165)
 
+We'll need to connect an actual debugger to the emulated Android device to see if we can get a shell. I'll be using GDB Enhanded Features (gef) to connect to the listener that was created/forwarded. You can install gef from [here](https://github.com/hugsy/gef) if you don't alraedy have it.
+```bash
+gdb
+(gdb) gef-remote 127.0.0.1 4444
+```
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c8c44f0d-d5e6-47ba-9ee4-7f3f5500a742)
 
-==============Make sure you are root, then we will attached the application PID with gdbserver so now we can just connect remotely, but before that we need to forward the port
-Open another terminal and run this command with the port you specified
-[adb forward tcp:8888 tcp:8888] you may need root permission to run all these commands, so if you face any permission issued don’t forget to run [adb root] before doing all steps
+When it initially finished, it prompted me with `(remote) get>`, where I entered `c` to continue - then immediately entered my buffer overflow password into the DIVA Application. Note that the DIVA App did not crash, rather become unresponsive as we're connected with the debugger - just select wait if prompted with 'Diva isn't responded'. Sadly, if the DIVA App ever crashes, you have to redo the 'gdbserver' within 'adb shell' as when DIVA is relaunched, it has a different PID that you'll have to attach to as well as the 'gef-remote 127.0.0.1 4444' part.
+
+| gef output | DIVA didn't crash, but is unreponsive |
+| ---------- | ------------------------------------- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/53ad1d71-d433-4f7f-928b-026ad2aabbcf) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/00d8f058-3e52-4d5b-9ab9-3132c0b99dbd) |
+
+Okay... I'm unable to proceed any further. The DIVA App just keeps crashing. ='(
 
 ---
-### Proof of Concept ###
-
+This concludes my vulnerability assessment and Proof of Concepts of the DIVA Application's various training modules.
 
 
