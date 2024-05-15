@@ -796,28 +796,72 @@ I decided to lauch **adb logcat** to view the Android's system logs when I put i
 
 Since I didn't see anything of interest in the Android system logs, and since the hint referenced 'a classic memory corruption vulnerability', I decided to check if there was a buffer overflow that I can exploit. That said, since computers are binary, I decided to input characters in base-2... ie: 2, 4, 8, 16, 32, 64... then work backwards as necessary.
 
-sixteen (16) A characters, nothing of interest in the Android system logs.
+Submitted sixteen (16) A characters, nothing of interest in the Android system logs, other than 
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/14a84314-a7b0-4ff2-93fa-2504a824dacc)
 
-thirty-one (31) A characters
+...not showing every attempt between 17 and 30 characters...
+
+Submitted thirty-one (31) A characters would crash it - it does not. That said, notice the 
 
 ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d524eee8-567b-4329-a9c4-659ae8d3522d)
 
-thirty-two (32) A characters, 
+Submitted thirty-two (32) A characters as the password, and the DIVA Applicaiton crashes.
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/4f35a5d9-3ef7-4aba-a4a5-0eed007c7399)
+| `abd logcat` (Android system logs) | Crashed DIVA App |
+| ---------------------------------- | ---------------- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/4f35a5d9-3ef7-4aba-a4a5-0eed007c7399) | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c9770f0e-356c-4b03-aa8b-095fec55249d) |
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c9770f0e-356c-4b03-aa8b-095fec55249d)
+Notice that a DEBUG enteries were output within the Android system logs, and that 'Fatal signal 11' when the DIVA App crashes - 0x41414141 is hex for AAAA.
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/dfb936eb-0d9c-4fe6-b02c-957f02af06cb)
+```bash
+05-15 13:26:04.096 14396 14396 F libc    : Fatal signal 11 (SIGSEGV), code 2, fault addr 0x41414141 in tid 12841 (khar.aseem.diva)
+// TRIMMED //
+05-15 13:26:04.172 14428 14428 F DEBUG   : signal 11 (SIGSEGV), code 2 (SEGV_ACCERR), fault addr 0x41414141
+05-15 13:26:04.172 14428 14428 F DEBUG   :     eax 00000000  ebx 41414141  ecx 00000006  edx 00000000
+05-15 13:26:04.172 14428 14428 F DEBUG   :     esi 41414141  edi 41414141
+05-15 13:26:04.172 14428 14428 F DEBUG   :     xcs 00000073  xds 0000007b  xes 0000007b  xfs 0000003b  xss 0000007b
+05-15 13:26:04.172 14428 14428 F DEBUG   :     eip a316ca00  ebp bfba7e8c  esp bfba7e40  flags 00010287
+// TRIMMED //
+```
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f9984700-73d2-483a-90f8-c00c43c0be9b)
+After a bit of tessting, I ended up deciding to send an input twenty-four (24) A characters, followed by sets of four (4) of ABCDEFGH [AAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH] (ref the hex chart below) - the DIVA App crashes as expected. This was done to see what else I can see within the Android system logs DEBUG lines.
+
+|  A  |  B  |  C  |  D  |  E  |  F  |  G  |  H  |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 0x41 | 0x42 | 0x43 | 0x44 | 0x45 | 0x46 | 0x47 | 0x48 |
 
 
+| `abd logcat` (Android system logs) | Crashed DIVA App |
+| ---------------------------------- | ---------------- |
+| ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5569c85d-79f7-484d-9bdf-c546a423efc9)
+ | ![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/2054d1b0-4364-4b1c-9016-2bba53c0032a) |
 
 
+Notice the following for the fault address and CPU jump locations that correlated with A(41), B(42), C(43), D(44). I don't see anything with E(45) or higher. So that's just AAAAAAAAAAAAAAAAAAAAAAAABBBBCCCCDDDD, thirty-two (32) to crash it, and a total of thirty-six (36) to see what's in the CPU jump locations, with sixteen (16) AAAABBBBCCCCDDDD characters or sixteen (16) hex-pairs 0x41414141424242424343434344444444.
 
+```bash
+05-15 13:56:31.309 15082 15082 F libc    : Fatal signal 11 (SIGSEGV), code 2, fault addr 0x44444444 in tid 15082 (khar.aseem.diva)
+// TRIMMED //
+05-15 13:56:31.417 15107 15107 F DEBUG   : signal 11 (SIGSEGV), code 2 (SEGV_ACCERR), fault addr 0x44444444
+05-15 13:56:31.417 15107 15107 F DEBUG   :     eax 00000000  ebx 41414141  ecx 00000006  edx 00000004
+05-15 13:56:31.417 15107 15107 F DEBUG   :     esi 42424242  edi 43434343
+05-15 13:56:31.418 15107 15107 F DEBUG   :     xcs 00000073  xds 0000007b  xes 0000007b  xfs 0000003b  xss 0000007b
+05-15 13:56:31.418 15107 15107 F DEBUG   :     eip 44444444  ebp bfba7e8c  esp bfba7e40  flags 00010287
+TRIMMED //
+```
+=============I'll need to attach a debugger to the emulated Android device, to proceed further. Using 'adb shell', we'll have the Adnroid device listen on port 4444 by determining the diva process ID and attaching it using gdbserver. Note that it doesn't have to be port 4444, it can be whatever.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/5e828d8a-fdc2-4131-8938-5227bcca66c2)
+
+In a separate terminal, use 'adb' to foward the emulated Android device's listening port of 4444 to the of 4444 on the kali host.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/271ddebd-b594-4aa2-a129-e6d989e93165)
+
+
+==============Make sure you are root, then we will attached the application PID with gdbserver so now we can just connect remotely, but before that we need to forward the port
+Open another terminal and run this command with the port you specified
+[adb forward tcp:8888 tcp:8888] you may need root permission to run all these commands, so if you face any permission issued don’t forget to run [adb root] before doing all steps
 
 ---
 ### Proof of Concept ###
