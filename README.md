@@ -786,15 +786,37 @@ Reference [Input Validation Issues - Part 1](#input-validation-issues---part-1) 
 
 In the jadx-gui, reference [here](#insecure-logging) on how to launch it, you can see the vulnerable code associated with "InputValidation3Activity".
 
-I decided to lauch **adb logcat** to view the Android's system logs when I put in a wrong password to see if it reveals anything.
+I decided to lauch **adb logcat** to view the Android's system logs when I put in a wrong password to see if it reveals anything - in this case eight (8) A characters.
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/76f982df-e2d3-486e-a7a0-b388e82bf0c6)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6fbe492f-78bf-43c9-b35e-5670957dd66d)
 
 - `adb logcat` outputs the following:
 
-![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/659d1a17-6ebf-44f0-8775-86de85d3e8cf)
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/6a2068e4-b5b8-42c8-aa15-3a341b287a78)
 
-- Since I didn't see anything of interest in the Android system logs, and since the hint referenced 'a classic memory corruption vulnerability', I decided to check if there was a buffer overflow that I can exploit. That said, since computers work off 
+Since I didn't see anything of interest in the Android system logs, and since the hint referenced 'a classic memory corruption vulnerability', I decided to check if there was a buffer overflow that I can exploit. That said, since computers are binary, I decided to input characters in base-2... ie: 2, 4, 8, 16, 32, 64... then work backwards as necessary.
+
+sixteen (16) A characters, nothing of interest in the Android system logs.
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/14a84314-a7b0-4ff2-93fa-2504a824dacc)
+
+thirty-one (31) A characters
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/d524eee8-567b-4329-a9c4-659ae8d3522d)
+
+thirty-two (32) A characters, 
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/4f35a5d9-3ef7-4aba-a4a5-0eed007c7399)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/c9770f0e-356c-4b03-aa8b-095fec55249d)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/dfb936eb-0d9c-4fe6-b02c-957f02af06cb)
+
+![image](https://github.com/high101bro/DIVA-Assessment/assets/13679268/f9984700-73d2-483a-90f8-c00c43c0be9b)
+
+
+
+
 
 
 ---
